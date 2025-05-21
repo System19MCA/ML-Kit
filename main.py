@@ -12,7 +12,7 @@ class MLKit:
         self.__render()
 
 
-    def runPCA(self):
+    def run_pca(self):
         def submit_handler():
             df = dr.perform_pca_from_csv(filename, "./csv/output.csv",int(dimensions_entry.get()))
             utils.showDF(self.dimensionality_reduction_frame, df)
@@ -82,6 +82,21 @@ class MLKit:
         target_column_entry = tk.Entry(dialog)
         target_column_entry.grid(row=1, column=1)
         tk.Button(dialog, text="Submit",command=submit_handler,padx=5, pady=2).grid(row=2, column=0)
+        dialog.mainloop() 
+
+    def run_naive_bayes_classifier(self):
+        def submit_handler():
+            df = cls.run_naive_bayes_on_csv(filename, target_column=target_column_entry.get(), output_csv_path="./csv/output_nbc.csv")
+            utils.showDF(self.classification_frame,df, title="Test Set")
+
+        filename = utils.load_csv_file()
+        dialog = tk.Toplevel(self.classification_frame, bg="purple", padx=20, pady=20)
+        dialog.geometry("280x100")
+        dialog.title("Enter Parameters")
+        tk.Label(dialog, bg="purple",fg="white", text="Enter target column: ").grid(row=0, column=0)
+        target_column_entry = tk.Entry(dialog)
+        target_column_entry.grid(row=0, column=1)
+        tk.Button(dialog, text="Submit",command=submit_handler,padx=5, pady=2).grid(row=1, column=0)
         dialog.mainloop()   
     
     def __render(self):
@@ -113,7 +128,7 @@ class MLKit:
         tk.Label(self.classification_frame, bg="tan1",  text='SVM').grid(row=3, column=0)
         tk.Label(self.classification_frame, bg="tan1",  text='ID3').grid(row=4, column=0)
         tk.Button(self.classification_frame, text="Load CSV", command=self.run_knn).grid(row=1, column=1)
-        tk.Button(self.classification_frame, text="Load CSV", command=self.run_agglomerative).grid(row=2, column=1)
+        tk.Button(self.classification_frame, text="Load CSV", command=self.run_naive_bayes_classifier).grid(row=2, column=1)
         tk.Button(self.classification_frame, text="Load CSV", command=self.run_dbscan).grid(row=3, column=1)
         tk.Button(self.classification_frame, text="Load CSV", command=self.run_dbscan).grid(row=4, column=1)
         tk.Label(self.classification_frame)
@@ -121,6 +136,6 @@ class MLKit:
     def __render_dimensionality_reduction_frame(self):
         tk.Label(self.dimensionality_reduction_frame, bg="lightgreen",  text='DIMENSIONALITY REDUCTION', justify="center", font=("Arial", 18)).grid(row=0, column=0, columnspan=3)
         tk.Label(self.dimensionality_reduction_frame, bg="lightgreen", text='Principal Component Analysis').grid(row=1, column=0)
-        tk.Button(self.dimensionality_reduction_frame, text='Load CSV', command=self.runPCA).grid(row=1, column=1)
+        tk.Button(self.dimensionality_reduction_frame, text='Load CSV', command=self.run_pca).grid(row=1, column=1)
     
 wind = MLKit()
