@@ -11,7 +11,6 @@ class MLKit:
         self.root_window = tk.Tk()
         self.__render()
 
-
     def run_pca(self):
         def submit_handler():
             df = dr.perform_pca_from_csv(filename, "./csv/output.csv",int(dimensions_entry.get()))
@@ -47,7 +46,6 @@ class MLKit:
         df = clust.perform_agglomerative_from_csv(filename, './csv/output_agg.csv')
         utils.showDF(self.clustering_frame, df)
         
-
     def run_dbscan(self):
         def submit_handler():
             df = clust.perform_dbscan_clustering_from_csv(filename,'./csv/output_dbscan.csv',eps=float(epsilon_entry.get()), min_samples=int(min_pts_entry.get()))
@@ -99,6 +97,36 @@ class MLKit:
         tk.Button(dialog, text="Submit",command=submit_handler,padx=5, pady=2).grid(row=1, column=0)
         dialog.mainloop()   
     
+    def run_svm(self):
+        def submit_handler():
+            df = cls.run_svm_on_csv(filename, target_column=target_column_entry.get(), output_csv_path="./csv/output_svm.csv")
+            utils.showDF(self.classification_frame,df, title="Test Set")
+
+        filename = utils.load_csv_file()
+        dialog = tk.Toplevel(self.classification_frame, bg="purple", padx=20, pady=20)
+        dialog.geometry("280x100")
+        dialog.title("Enter Parameters")
+        tk.Label(dialog, bg="purple",fg="white", text="Enter target column: ").grid(row=0, column=0)
+        target_column_entry = tk.Entry(dialog)
+        target_column_entry.grid(row=0, column=1)
+        tk.Button(dialog, text="Submit",command=submit_handler,padx=5, pady=2).grid(row=1, column=0)
+        dialog.mainloop()   
+    
+    def run_id3(self):
+        def submit_handler():
+            df = cls.run_id3_on_csv(filename, target_column=target_column_entry.get(), output_csv_path="./csv/output_id3.csv")
+            utils.showDF(self.classification_frame,df, title="Test Set")
+
+        filename = utils.load_csv_file()
+        dialog = tk.Toplevel(self.classification_frame, bg="purple", padx=20, pady=20)
+        dialog.geometry("280x100")
+        dialog.title("Enter Parameters")
+        tk.Label(dialog, bg="purple",fg="white", text="Enter target column: ").grid(row=0, column=0)
+        target_column_entry = tk.Entry(dialog)
+        target_column_entry.grid(row=0, column=1)
+        tk.Button(dialog, text="Submit",command=submit_handler,padx=5, pady=2).grid(row=1, column=0)
+        dialog.mainloop()   
+    
     def __render(self):
         self.clustering_frame = tk.Frame(self.root_window,bg='lightblue',padx=20, pady=20)
         self.classification_frame = tk.Frame(self.root_window, bg='tan1',padx=20, pady=20)
@@ -129,8 +157,8 @@ class MLKit:
         tk.Label(self.classification_frame, bg="tan1",  text='ID3').grid(row=4, column=0)
         tk.Button(self.classification_frame, text="Load CSV", command=self.run_knn).grid(row=1, column=1)
         tk.Button(self.classification_frame, text="Load CSV", command=self.run_naive_bayes_classifier).grid(row=2, column=1)
-        tk.Button(self.classification_frame, text="Load CSV", command=self.run_dbscan).grid(row=3, column=1)
-        tk.Button(self.classification_frame, text="Load CSV", command=self.run_dbscan).grid(row=4, column=1)
+        tk.Button(self.classification_frame, text="Load CSV", command=self.run_svm).grid(row=3, column=1)
+        tk.Button(self.classification_frame, text="Load CSV", command=self.run_id3).grid(row=4, column=1)
         tk.Label(self.classification_frame)
 
     def __render_dimensionality_reduction_frame(self):
