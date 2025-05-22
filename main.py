@@ -1,4 +1,5 @@
 import tkinter as tk
+import customtkinter as ctk
 import utils
 import dimensionality_reduction as dr
 import classification as cls
@@ -8,7 +9,8 @@ import clustering as clust
 class MLKit:
     
     def __init__(self):
-        self.root_window = tk.Tk()
+        self.root_window = ctk.CTk()
+        self.root_window.title("ML Kit")
         self.__render()
 
     def run_pca(self):
@@ -92,7 +94,7 @@ class MLKit:
         dialog.geometry("280x100")
         dialog.title("Enter Parameters")
         tk.Label(dialog, bg="purple",fg="white", text="Enter target column: ").grid(row=0, column=0)
-        target_column_entry = tk.Entry(dialog)
+        target_column_entry = ctk.CTkEntry(dialog)
         target_column_entry.grid(row=0, column=1)
         tk.Button(dialog, text="Submit",command=submit_handler,padx=5, pady=2).grid(row=1, column=0)
         dialog.mainloop()   
@@ -140,30 +142,28 @@ class MLKit:
         self.root_window.mainloop()
 
     def __render_clustering_frame(self):
-        tk.Label(self.clustering_frame, bg="lightblue",  text='CLUSTERING ALGORITHMS', justify="center", font=("Arial", 18)).grid(row=0, column=0, columnspan=2)
-        tk.Label(self.clustering_frame, bg="lightblue",  text='K-means').grid(row=1, column=0)
-        tk.Label(self.clustering_frame, bg="lightblue",  text='Agglomerative').grid(row=2, column=0)
-        tk.Label(self.clustering_frame, bg="lightblue",  text='DBSCAN').grid(row=3, column=0)
-        tk.Button(self.clustering_frame, text="Load CSV", command=self.run_kmeans).grid(row=1, column=1)
-        tk.Button(self.clustering_frame, text="Load CSV", command=self.run_agglomerative).grid(row=2, column=1)
-        tk.Button(self.clustering_frame, text="Load CSV", command=self.run_dbscan).grid(row=3, column=1)
-        tk.Label(self.clustering_frame)
+        ctk.CTkLabel(self.clustering_frame, text='CLUSTERING ALGORITHMS', justify="center", font=("Arial",24,"bold" )).grid(row=0, column=0, columnspan=2)
+        ctk.CTkLabel(self.clustering_frame,  text='K-means++').grid(row=1, column=0)
+        ctk.CTkLabel(self.clustering_frame,  text='Agglomerative').grid(row=2, column=0)
+        ctk.CTkLabel(self.clustering_frame,  text='DBSCAN').grid(row=3, column=0)
+        ctk.CTkButton(self.clustering_frame,text="Load CSV", command=self.run_kmeans).grid(row=1, column=1,padx=10, pady=5)
+        ctk.CTkButton(self.clustering_frame, text="Load CSV", command=self.run_agglomerative).grid(row=2, column=1,padx=10, pady=5)
+        ctk.CTkButton(self.clustering_frame, text="Load CSV", command=self.run_dbscan).grid(row=3, column=1,padx=10, pady=5)
 
     def __render_classification_frame(self):
-        tk.Label(self.classification_frame, bg="tan1",  text='CLASSIFICATION ALGORITHMS', justify="center", font=("Arial", 18)).grid(row=0, column=0, columnspan=2)
-        tk.Label(self.classification_frame, bg="tan1",  text='KNN').grid(row=1, column=0)
-        tk.Label(self.classification_frame, bg="tan1",  text='Naive Bayesian Classifier').grid(row=2, column=0)
-        tk.Label(self.classification_frame, bg="tan1",  text='SVM').grid(row=3, column=0)
-        tk.Label(self.classification_frame, bg="tan1",  text='ID3').grid(row=4, column=0)
-        tk.Button(self.classification_frame, text="Load CSV", command=self.run_knn).grid(row=1, column=1)
-        tk.Button(self.classification_frame, text="Load CSV", command=self.run_naive_bayes_classifier).grid(row=2, column=1)
-        tk.Button(self.classification_frame, text="Load CSV", command=self.run_svm).grid(row=3, column=1)
-        tk.Button(self.classification_frame, text="Load CSV", command=self.run_id3).grid(row=4, column=1)
-        tk.Label(self.classification_frame)
+        ctk.CTkLabel(self.classification_frame , text='CLASSIFICATION ALGORITHMS', justify="center", font=("Arial", 24,"bold" )).grid(row=0, column=0, columnspan=2)
+        ctk.CTkLabel(self.classification_frame , text='KNN').grid(row=1, column=0)
+        ctk.CTkLabel(self.classification_frame , text='Naive Bayesian Classifier').grid(row=2, column=0)
+        ctk.CTkLabel(self.classification_frame , text='SVM').grid(row=3, column=0)
+        ctk.CTkLabel(self.classification_frame , text='ID3').grid(row=4, column=0)
+        ctk.CTkButton(self.classification_frame, text="Load CSV", command=self.run_knn).grid(row=1, column=1,padx=10, pady=5)
+        ctk.CTkButton(self.classification_frame, text="Load CSV", command=self.run_naive_bayes_classifier).grid(row=2, column=1,padx=10, pady=5)
+        ctk.CTkButton(self.classification_frame, text="Load CSV", command=self.run_svm).grid(row=3, column=1,padx=10, pady=5)
+        ctk.CTkButton(self.classification_frame, text="Load CSV", command=self.run_id3).grid(row=4, column=1,padx=10, pady=5)
 
     def __render_dimensionality_reduction_frame(self):
-        tk.Label(self.dimensionality_reduction_frame, bg="lightgreen",  text='DIMENSIONALITY REDUCTION', justify="center", font=("Arial", 18)).grid(row=0, column=0, columnspan=3)
-        tk.Label(self.dimensionality_reduction_frame, bg="lightgreen", text='Principal Component Analysis').grid(row=1, column=0)
-        tk.Button(self.dimensionality_reduction_frame, text='Load CSV', command=self.run_pca).grid(row=1, column=1)
+        ctk.CTkLabel(self.dimensionality_reduction_frame,   text='DIMENSIONALITY REDUCTION', justify="center", font=("Arial", 24,"bold" )).grid(row=0, column=0, columnspan=3)
+        ctk.CTkLabel(self.dimensionality_reduction_frame,  text='Principal Component Analysis').grid(row=1, column=0)
+        ctk.CTkButton(self.dimensionality_reduction_frame, text='Load CSV', command=self.run_pca).grid(row=1, column=1,padx=10, pady=5)
     
 wind = MLKit()

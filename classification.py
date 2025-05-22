@@ -1,8 +1,10 @@
+from matplotlib import pyplot as plt
 import pandas as pd
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, classification_report, confusion_matrix
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
@@ -91,6 +93,39 @@ def run_knn_on_csv(
         print(f"\nSaving results to: {output_csv_path}")
         output_df.to_csv(output_csv_path, index=False)
         print("Results saved successfully.")
+
+        
+        # 5. Generate the Confusion Matrix
+        # This compares the true labels (y_test) with the predicted labels (y_pred).
+        # Each row represents instances in an actual class, while each column represents instances in a predicted class.
+        cm = confusion_matrix(y_test, y_pred)
+
+        print("\nConfusion Matrix (Raw Data):")
+        print(cm)
+
+        # 6. Display the Confusion Matrix using seaborn heatmap
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm,
+                    annot=True,      # Show the actual numbers in each cell
+                    fmt='d',         # Format numbers as integers
+                    cmap='Blues',    # Color map for the heatmap (e.g., 'Blues', 'Greens', 'YlGnBu')
+                    xticklabels=output_df[f"Predicted_{target_column}"], # Labels for predicted classes on x-axis
+                    yticklabels=output_df[f"Actual_{target_column}"]) # Labels for true classes on y-axis
+        plt.xlabel('Predicted Label')
+        plt.ylabel('True Label')
+        plt.title(f'Confusion Matrix for KNN Classifier (n_neighbors={n_neighbors})')
+        plt.tight_layout() # Adjust layout to prevent labels from overlapping
+        plt.show()
+
+        # Alternatively, using ConfusionMatrixDisplay (from scikit-learn, often preferred)
+        # This provides a more convenient and often better-looking way to plot directly.
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=target_column)
+        disp.plot(cmap='Blues', values_format='d') # 'd' for integer format
+        plt.title(f'Confusion Matrix for KNN Classifier (n_neighbors={n_neighbors})')
+        plt.tight_layout()
+        plt.show()
+
+        print("\nConfusion matrices displayed successfully.")
 
         return output_df
 

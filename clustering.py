@@ -1,8 +1,12 @@
 import pandas as pd
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.cluster import DBSCAN
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.cluster.hierarchy import dendrogram, linkage
 
 
 def perform_kmeans_from_csv(input_csv_path, output_csv_path, n_clusters):
@@ -32,7 +36,7 @@ def perform_kmeans_from_csv(input_csv_path, output_csv_path, n_clusters):
 
     # 6. Save to CSV
     df.to_csv(output_csv_path, index=False)
-
+    
     print(f"Clustering complete. Results saved to '{output_csv_path}'")
 
     return df
@@ -57,6 +61,23 @@ def perform_agglomerative_from_csv(input_csv_path, output_csv_path, n_clusters=2
         # 4. Feature Scaling (optional but often recommended)
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
+
+        linked_matrix = linkage(X_scaled, method='ward')
+
+        # 6. Plot the dendrogram
+        plt.figure(figsize=(12,8))
+        dendrogram(
+            linked_matrix,
+            orientation='top', # 'top', 'bottom', 'left', 'right'
+            distance_sort='descending',
+            show_leaf_counts=True, # Show the number of original observations in each leaf
+            # You can optionally add labels if your DataFrame has an ID column
+            # labels=df['ID_Column'].values # Replace 'ID_Column' with your actual ID column
+        )
+        plt.title("Dendrogram")
+        plt.xlabel("Number of points in node (or index of point)")
+        plt.ylabel("Distance")
+        plt.show()
 
         # 5. Apply Agglomerative Clustering
         agg_clustering = AgglomerativeClustering(n_clusters=n_clusters)
@@ -110,10 +131,11 @@ def perform_dbscan_clustering_from_csv(input_csv_file,output_csv_file, eps=0.5, 
         # 4. Feature Scaling (optional but often recommended for DBSCAN)
         # scaler = StandardScaler()
         # X_scaled = scaler.fit_transform(X)
+        X_scaled = X
 
         # 5. Apply DBSCAN Clustering
         dbscan = DBSCAN(eps=eps, min_samples=min_samples)
-        cluster_labels = dbscan.fit_predict(X)
+        cluster_labels = dbscan.fit_predict(X_scaled)
 
         # 6. Add Cluster Labels to DataFrame
         df['cluster'] = cluster_labels
@@ -125,6 +147,38 @@ def perform_dbscan_clustering_from_csv(input_csv_file,output_csv_file, eps=0.5, 
         # 8. Save to CSV
         df.to_csv(output_csv_file, index=False)
         print(f"\nResults saved to '{output_csv_file}'")
+
+        # 10. Generate and display the scatter plot visualization
+        plt.figure(figsize=(10, 8))
+
+        if len(numeric_cols) >= 2:
+            # If 2 features, plot directly
+            if len(numeric_cols) == 2:
+                x_col, y_col = numeric_cols[0], numeric_cols[1]
+                sns.scatterplot(x=x_col, y=y_col, hue='cluster', data=df, palette='viridis', legend='full')
+                plt.title(f'DBSCAN Clustering Results ({x_col} vs {y_col})')
+                plt.xlabel(x_col)
+                plt.ylabel(y_col)
+            # If more than 2 features, use PCA for 2D visualization
+            else:
+                print("\nMore than 2 numeric columns found. Using PCA for 2D visualization.")
+                # Apply PCA to reduce dimensions to 2
+                pca = PCA(n_components=2)
+                principal_components = pca.fit_transform(X_scaled)
+                pca_df = pd.DataFrame(data=principal_components, columns=['Principal Component 1', 'Principal Component 2'])
+                pca_df['cluster'] = df['cluster'] # Add cluster labels to PCA DataFrame
+
+                sns.scatterplot(x='Principal Component 1', y='Principal Component 2', hue='cluster', data=pca_df, palette='viridis', legend='full')
+                plt.title('DBSCAN Clustering Results (PCA)')
+                plt.xlabel('Principal Component 1')
+                plt.ylabel('Principal Component 2')
+
+            plt.grid(True, linestyle='--', alpha=0.7)
+            plt.show()
+        else:
+            print("\nNot enough numeric columns (less than 2) to generate a scatter plot visualization.")
+
+
 
         return df  # Return the modified DataFrame
 
