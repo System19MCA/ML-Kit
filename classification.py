@@ -7,6 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, classification_report, confusion_matrix
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
+import utils
 
 def run_knn_on_csv(
     input_csv_path,
@@ -313,7 +314,6 @@ def run_svm_on_csv(
         print("\nClassification Report:")
         # Generate classification report as a dictionary
         print(classification_report(y_test, y_pred))
-
 
         # 7. Prepare the output DataFrame
         # Combine original test features with actual and predicted labels

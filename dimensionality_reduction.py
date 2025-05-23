@@ -21,9 +21,10 @@ def perform_pca_from_csv(input_csv_path, output_csv_path, n_components=None):
     X = df.select_dtypes(include=['number'])
 
     # Standardize the features
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
+    # scaler = StandardScaler()
+    # X_scaled = scaler.fit_transform(X)
+    X_scaled = X
+    
     # Apply PCA
     pca = PCA(n_components=n_components)
     principal_components = pca.fit_transform(X_scaled)

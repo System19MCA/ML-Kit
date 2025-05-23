@@ -27,8 +27,9 @@ def perform_kmeans_from_csv(input_csv_path, output_csv_path, n_clusters):
     X = X.fillna(X.mean())
 
     # 4. Feature Scaling (optional but often recommended)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    # scaler = StandardScaler()
+    # X_scaled = scaler.fit_transform(X)
+    X_scaled = X
 
     # 5. Apply K-means
     kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
@@ -59,9 +60,11 @@ def perform_agglomerative_from_csv(input_csv_path, output_csv_path, n_clusters=2
         X = X.fillna(X.mean())
 
         # 4. Feature Scaling (optional but often recommended)
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
+        # scaler = StandardScaler()
+        # X_scaled = scaler.fit_transform(X)
+        X_scaled = X
 
+        # Visualization
         linked_matrix = linkage(X_scaled, method='ward')
 
         # 6. Plot the dendrogram
@@ -95,6 +98,7 @@ def perform_agglomerative_from_csv(input_csv_path, output_csv_path, n_clusters=2
         print(f"\nResults saved to '{output_csv_path}'")
 
         return df
+
 def perform_dbscan_clustering_from_csv(input_csv_file,output_csv_file, eps=0.5, min_samples=5 ):
     """
     Applies DBSCAN clustering to a CSV file using all numeric columns,

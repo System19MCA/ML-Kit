@@ -2,6 +2,10 @@ from tkinter import filedialog
 import os
 import tkinter as tk
 from tkinter import ttk
+import seaborn as sns
+from matplotlib import pyplot as plt
+import pandas as pd
+from sklearn.metrics import classification_report
 
 def load_csv_file():
     filename = filedialog.askopenfilename(initialdir=os.getcwd(), 
@@ -51,3 +55,24 @@ def showDF(frame, df, title="Results"):
     tree.pack(fill=tk.BOTH, expand=True)
 
     x.mainloop()    
+
+
+def plot_classification_report(y_true, y_pred, target_names=None):
+    """
+    Plots the classification report as a heatmap.
+
+    Args:
+        y_true (array-like): True labels.
+        y_pred (array-like): Predicted labels.
+        target_names (list, optional): List of target class names. Defaults to None.
+    """
+    report = classification_report(y_true, y_pred, target_names=target_names, output_dict=True)
+    df = pd.DataFrame(report).transpose()
+    
+    fig, ax = plt.subplots(figsize=(8, len(df)/2))
+    sns.heatmap(df.iloc[:-1, :].T, annot=True, fmt=".2f", cmap="YlGnBu", ax=ax)
+
+    plt.title("Classification Report")
+    plt.ylabel("Metrics")
+    plt.xlabel("Classes")
+    plt.show()
